@@ -27,7 +27,9 @@ jobs:
 
       - name: Build
         working-directory: frontend
-        run: npm run build -- --configuration production --base-href /TanCura-Patient-Claims-Prescription-Management-System/
+        run: |
+          npm run build -- --configuration production --base-href /TanCura-Patient-Claims-Prescription-Management-System/
+          cp dist/tancura-ui/browser/index.html dist/tancura-ui/browser/404.html
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
