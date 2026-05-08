@@ -1,1 +1,0 @@
-import"./chunk-35PI25VP.js";var t=[{path:"",loadComponent:()=>import("./chunk-3CPX2OXD.js").then(o=>o.DashboardComponent)},{path:"patients",loadComponent:()=>import("./chunk-YHX6J2EP.js").then(o=>o.PatientsComponent)},{path:"providers",loadComponent:()=>import("./chunk-HHOOM2ME.js").then(o=>o.ProvidersComponent)}];export{t as ADMIN_ROUTES};
