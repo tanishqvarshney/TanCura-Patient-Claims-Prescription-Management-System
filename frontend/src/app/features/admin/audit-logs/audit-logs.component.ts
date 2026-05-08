@@ -1,7 +1,7 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
-import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,7 @@ import { AdminService } from '../../../core/services/api.services';
   standalone: true,
   imports: [
     ReactiveFormsModule, MatCardModule, MatTableModule, MatPaginatorModule,
-    MatFormFieldModule, MatSelectModule, MatIconModule, MatChipsModule,
+    MatFormFieldModule, MatInputModule, MatSelectModule, MatIconModule, MatChipsModule,
     MatProgressBarModule, MatTooltipModule, DatePipe, SlicePipe,
     MatDatepickerModule, MatNativeDateModule
   ],
@@ -89,7 +89,7 @@ import { AdminService } from '../../../core/services/api.services';
 
       <div class="table-wrapper mat-elevation-z2">
         <div class="scroll-container">
-          <table mat-table [dataSource]="logs()" class="audit-table">
+          <table mat-table [dataSource]="dataSource" class="audit-table">
 
             <ng-container matColumnDef="timestamp">
               <th mat-header-cell *matHeaderCellDef>Timestamp (UTC)</th>
@@ -249,7 +249,7 @@ export class AuditLogsComponent implements OnInit {
   private admin = inject(AdminService);
 
   columns = ['timestamp', 'userId', 'action', 'targetEntity', 'entityId', 'ipAddress', 'status'];
-  logs = signal<AuditLog[]>([]);
+  dataSource = new MatTableDataSource<AuditLog>([]);
   total = signal(0);
   loading = signal(false);
   page = 1;
@@ -285,8 +285,8 @@ export class AuditLogsComponent implements OnInit {
         if (this.filters.value.action) filtered = filtered.filter(l => l.action === this.filters.value.action);
         if (this.filters.value.userId) filtered = filtered.filter(l => l.userId.toLowerCase().includes(this.filters.value.userId!.toLowerCase()));
         
-        this.logs.set(filtered); 
-        this.total.set(filtered.length); 
+        this.dataSource.data = filtered; 
+        this.total.set(r.total); 
         this.loading.set(false); 
       },
       error: () => this.loading.set(false)
