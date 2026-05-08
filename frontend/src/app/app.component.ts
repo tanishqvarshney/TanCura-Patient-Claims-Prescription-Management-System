@@ -274,7 +274,6 @@ export class AppComponent {
     { icon: 'medical_services', label: 'Provider Network', route: '/admin/providers', roles: ['Admin'] },
     { icon: 'people', label: 'Patient Directory', route: '/admin/patients', roles: ['Admin'] },
     { icon: 'medication', label: 'Drug Formulary', route: '/pharmacy', roles: ['Admin', 'Provider', 'Patient'] },
-    { icon: 'history', label: 'Audit Logs', route: '/admin/audit-logs', roles: ['Admin'] },
     { icon: 'settings', label: 'Settings', route: '/settings', roles: ['Admin', 'Provider', 'Patient'] }
   ];
 
