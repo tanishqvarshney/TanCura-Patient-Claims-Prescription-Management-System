@@ -83,7 +83,10 @@ interface NavItem {
                 
                 <button mat-button [matMenuTriggerFor]="userMenu" class="user-pill">
                   @if (auth.currentUser(); as u) {
-                    <span class="user-name">{{ u.email.split('@')[0] }}</span>
+                    <div class="user-meta">
+                      <span class="user-name">{{ u.email.split('@')[0] }}</span>
+                      <span class="user-role">{{ u.role }}</span>
+                    </div>
                     <div class="avatar">
                       {{ u.email[0].toUpperCase() }}
                     </div>
@@ -124,10 +127,10 @@ interface NavItem {
                 </button>
               </mat-menu>
 
-              <mat-menu #userMenu="matMenu" class="premium-menu">
-                <div class="menu-header" mat-menu-item disabled>
+              <mat-menu #userMenu="matMenu" class="premium-menu profile-menu">
+                <div class="menu-header">
                   <mat-icon>account_circle</mat-icon>
-                  <span>My Account</span>
+                  <span>Administrative Control</span>
                 </div>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="auth.logout()">
@@ -212,16 +215,29 @@ interface NavItem {
     .icon-btn { color: #94a3b8; }
     .user-pill {
       display: flex; align-items: center; gap: 12px;
-      padding: 4px 4px 4px 16px !important; border-radius: 14px;
+      padding: 0 4px 0 16px !important; border-radius: 16px;
       height: 48px; transition: var(--transition);
+      background: rgba(255, 255, 255, 0.5); border: 1px solid var(--border);
     }
-    .user-pill:hover { background: var(--bg-main); }
-    .user-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
+    .user-pill:hover { background: #fff; box-shadow: var(--shadow-sm); }
+    
+    .user-meta { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+    .user-name { font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+    .user-role { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+
     .avatar {
-      width: 40px; height: 40px; border-radius: 10px; background: var(--border);
-      color: var(--text-main); display: flex; align-items: center; justify-content: center;
-      font-weight: 700; font-size: 14px;
+      width: 40px; height: 40px; border-radius: 12px; background: var(--primary);
+      color: #fff; display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 14px; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
     }
+
+    .profile-menu { min-width: 200px; }
+    .menu-header { 
+      padding: 16px 20px; display: flex; align-items: center; gap: 10px;
+      color: var(--text-muted); pointer-events: none;
+    }
+    .menu-header span { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+    .menu-header mat-icon { font-size: 18px; width: 18px; height: 18px; opacity: 0.5; }
 
     .content-area { padding: 32px; padding-top: 0; flex: 1; }
 
