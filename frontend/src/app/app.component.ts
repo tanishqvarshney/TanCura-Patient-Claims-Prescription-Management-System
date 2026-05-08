@@ -81,14 +81,16 @@ interface NavItem {
                   <mat-icon>settings</mat-icon>
                 </button>
                 
-                <button mat-button [matMenuTriggerFor]="userMenu" class="user-pill">
+                <button [matMenuTriggerFor]="userMenu" class="user-pill-btn">
                   @if (auth.currentUser(); as u) {
-                    <div class="user-meta">
-                      <span class="user-name">{{ u.email.split('@')[0] }}</span>
-                      <span class="user-role">{{ u.role }}</span>
-                    </div>
-                    <div class="avatar">
-                      {{ u.email[0].toUpperCase() }}
+                    <div class="user-info-wrap">
+                      <div class="user-text-meta">
+                        <span class="user-name">{{ u.email.split('@')[0] }}</span>
+                        <span class="user-role">{{ u.role }}</span>
+                      </div>
+                      <div class="avatar-circle">
+                        {{ u.email[0].toUpperCase() }}
+                      </div>
                     </div>
                   }
                 </button>
@@ -213,22 +215,29 @@ interface NavItem {
 
     .user-actions { display: flex; align-items: center; gap: 8px; }
     .icon-btn { color: #94a3b8; }
-    .user-pill {
-      display: flex; align-items: center; gap: 12px;
-      padding: 0 4px 0 16px !important; border-radius: 16px;
-      height: 48px; transition: var(--transition);
-      background: rgba(255, 255, 255, 0.5); border: 1px solid var(--border);
+    .user-pill-btn {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 4px 4px 16px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      outline: none;
+      box-shadow: var(--shadow-sm);
     }
-    .user-pill:hover { background: #fff; box-shadow: var(--shadow-sm); }
+    .user-pill-btn:hover { background: #fff; box-shadow: var(--shadow-md); border-color: var(--primary); }
     
-    .user-meta { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
-    .user-name { font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.2; }
-    .user-role { font-size: 10px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; opacity: 0.8; }
+    .user-info-wrap { display: flex; align-items: center; gap: 12px; }
+    .user-text-meta { display: flex; flex-direction: column; align-items: flex-end; }
+    .user-name { font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.1; margin-bottom: 2px; }
+    .user-role { font-size: 9px; font-weight: 800; color: var(--primary); text-transform: uppercase; letter-spacing: 1px; }
 
-    .avatar {
-      width: 40px; height: 40px; border-radius: 12px; background: var(--primary);
+    .avatar-circle {
+      width: 36px; height: 36px; border-radius: 50%; background: var(--primary);
       color: #fff; display: flex; align-items: center; justify-content: center;
-      font-weight: 800; font-size: 14px; box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+      font-weight: 800; font-size: 14px; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
     }
 
     .profile-menu { min-width: 200px; }
