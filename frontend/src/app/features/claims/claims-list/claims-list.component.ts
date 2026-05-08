@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, signal, OnDestroy, effect } from '@angular/core';
+import { Component, OnInit, inject, signal, OnDestroy, effect, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -134,8 +134,8 @@ import { Subject, takeUntil, debounceTime, switchMap, finalize, tap } from 'rxjs
             <button mat-icon-button [disabled]="currentPage() === 1" (click)="prevPage()">
               <mat-icon>chevron_left</mat-icon>
             </button>
-            <span class="page-indicator">Page {{ currentPage() }} of {{ totalPages()() }}</span>
-            <button mat-icon-button [disabled]="currentPage() >= totalPages()()" (click)="nextPage()">
+            <span class="page-indicator">Page {{ currentPage() }} of {{ totalPages() }}</span>
+            <button mat-icon-button [disabled]="currentPage() >= totalPages()" (click)="nextPage()">
               <mat-icon>chevron_right</mat-icon>
             </button>
           </div>
@@ -237,6 +237,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   total = signal(0);
   currentPage = signal(1);
   pageSize = 50;
+  totalPages = computed(() => Math.ceil(this.total() / this.pageSize) || 1);
 
   constructor() {
     this.searchSubject.pipe(
@@ -263,10 +264,6 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
     });
   }
 
-  get totalPages() {
-    return () => Math.ceil(this.total() / this.pageSize) || 1;
-  }
-
   ngOnInit() {
     this.loadStats();
     this.searchSubject.next(this.searchService.query());
@@ -290,7 +287,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   }
 
   nextPage() {
-    if (this.currentPage() < this.totalPages()()) {
+    if (this.currentPage() < this.totalPages()) {
       this.currentPage.update(p => p + 1);
       this.loadClaimsPage();
     }
