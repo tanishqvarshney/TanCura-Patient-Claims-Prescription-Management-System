@@ -76,6 +76,45 @@ h1, h2, h3, h4, .font-display {
 .mat-mdc-select-placeholder { color: var(--text-muted) !important; }
 .mat-mdc-select-arrow svg { fill: var(--text-muted) !important; }
 
+/* Dark Theme Variables */
+body.dark-theme {
+  --bg-main: #020617;
+  --bg-surface: #0f172a;
+  --bg-card: #1e293b;
+  --bg-side: #0f172a;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-on-light: #f8fafc;
+  --border: rgba(255, 255, 255, 0.1);
+  --primary-light: rgba(59, 130, 246, 0.15);
+}
+
+body.dark-theme .glass-card,
+body.dark-theme .frosted-card {
+  background: rgba(15, 23, 42, 0.7) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+}
+
+body.dark-theme .mat-mdc-card {
+  background-color: var(--bg-card) !important;
+  color: var(--text-main) !important;
+}
+
+body.dark-theme input, 
+body.dark-theme .pill-input {
+  background: rgba(30, 41, 59, 0.5) !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body:not(.glass-effect) .glass-card,
+body:not(.glass-effect) .frosted-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: var(--bg-card) !important;
+}
+
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }

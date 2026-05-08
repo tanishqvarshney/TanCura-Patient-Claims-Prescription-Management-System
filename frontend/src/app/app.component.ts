@@ -150,17 +150,17 @@ interface NavItem {
       margin-bottom: 4px !important; transition: var(--transition);
       color: var(--text-muted) !important;
     }
-    .nav-item:hover { background: #f8fafc !important; color: var(--text-main) !important; }
+    .nav-item:hover { background: var(--bg-main) !important; color: var(--text-main) !important; }
     .active-link { background: var(--primary-light) !important; color: var(--primary) !important; font-weight: 700 !important; }
     
     .nav-label { font-size: 15px; font-weight: 500; }
     .nav-item mat-icon { font-size: 22px; width: 22px; height: 22px; margin-right: 12px; }
 
     .sidebar-footer {
-      padding: 20px; border-top: 1px solid #f1f5f9;
+      padding: 20px; border-top: 1px solid var(--border);
       display: flex; justify-content: center;
     }
-    .toggle-btn { background: #f1f5f9; color: #64748b; }
+    .toggle-btn { background: var(--bg-main); color: var(--text-muted); }
 
     .main-content-wrapper { background: var(--bg-main); }
     .toolbar-sticky-container { position: sticky; top: 0; z-index: 100; background: var(--bg-main); }
@@ -168,11 +168,11 @@ interface NavItem {
     .toolbar-spacer { flex: 1 1 auto; }
 
     .search-pill {
-      background: #fff; border-radius: 9999px; height: 48px; width: 340px;
+      background: var(--bg-surface); border-radius: 9999px; height: 48px; width: 340px;
       display: flex; align-items: center; padding: 0 20px; gap: 12px;
-      border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02);
     }
-    .search-pill mat-icon { color: #94a3b8; font-size: 20px; width: 20px; height: 20px; }
+    .search-pill mat-icon { color: var(--text-muted); font-size: 20px; width: 20px; height: 20px; }
     .search-pill input { background: transparent; border: none; outline: none; width: 100%; font-size: 14px; color: var(--text-main); }
 
     .user-actions { display: flex; align-items: center; gap: 8px; }
@@ -182,10 +182,10 @@ interface NavItem {
       padding: 4px 4px 4px 16px !important; border-radius: 14px;
       height: 48px; transition: var(--transition);
     }
-    .user-pill:hover { background: #f1f5f9; }
+    .user-pill:hover { background: var(--bg-main); }
     .user-name { font-size: 14px; font-weight: 600; color: var(--text-main); }
     .avatar {
-      width: 40px; height: 40px; border-radius: 10px; background: #e2e8f0;
+      width: 40px; height: 40px; border-radius: 10px; background: var(--border);
       color: var(--text-main); display: flex; align-items: center; justify-content: center;
       font-weight: 700; font-size: 14px;
     }
