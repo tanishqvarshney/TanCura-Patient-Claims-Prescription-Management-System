@@ -6,6 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { BaseChartDirective } from 'ng2-charts';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ClaimsService } from '../../../core/services/api.services';
 import { ClaimMetrics } from '../../../shared/models/models';
 
@@ -14,7 +17,7 @@ import { ClaimMetrics } from '../../../shared/models/models';
   standalone: true,
   imports: [
     CommonModule, MatCardModule, MatIconModule, MatButtonModule,
-    MatProgressBarModule, BaseChartDirective
+    MatProgressBarModule, MatMenuModule, MatSnackBarModule, BaseChartDirective
   ],
   template: `
     <div class="dashboard-container fade-in">
@@ -60,7 +63,25 @@ import { ClaimMetrics } from '../../../shared/models/models';
           <div class="chart-container">
             <div class="c-header">
               <h3>Claims Performance (30 Days)</h3>
-              <button mat-icon-button><mat-icon>more_vert</mat-icon></button>
+              <button mat-icon-button [matMenuTriggerFor]="chartMenu">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+
+              <mat-menu #chartMenu="matMenu" class="premium-menu">
+                <button mat-menu-item (click)="exportChartData()">
+                  <mat-icon>download</mat-icon>
+                  <span>Export to CSV</span>
+                </button>
+                <button mat-menu-item (click)="toggleLegend()">
+                  <mat-icon>{{ lineChartOptions!.plugins!.legend!.display ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  <span>{{ lineChartOptions!.plugins!.legend!.display ? 'Hide' : 'Show' }} Legend</span>
+                </button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="refreshData()">
+                  <mat-icon>refresh</mat-icon>
+                  <span>Refresh Telemetry</span>
+                </button>
+              </mat-menu>
             </div>
             <div class="chart-wrapper">
               <canvas baseChart
@@ -209,6 +230,8 @@ import { ClaimMetrics } from '../../../shared/models/models';
 })
 export class DashboardComponent implements OnInit {
   private claimsService = inject(ClaimsService);
+  private snackBar = inject(MatSnackBar);
+
   metrics = signal<ClaimMetrics>({
     totalClaims: 0, approved: 0, rejected: 0, pending: 0,
     totalAmountProcessed: 0, avgProcessingHours: 0, activePatients: 0,
@@ -250,6 +273,39 @@ export class DashboardComponent implements OnInit {
   };
 
   ngOnInit() {
-    this.claimsService.getStats().subscribe(m => this.metrics.set(m));
+    this.refreshData();
+  }
+
+  refreshData() {
+    this.claimsService.getStats().subscribe(m => {
+      this.metrics.set(m);
+      this.snackBar.open('Dashboard telemetry synchronized', 'Success', { duration: 2000 });
+    });
+  }
+
+  toggleLegend() {
+    if (this.lineChartOptions?.plugins?.legend) {
+      this.lineChartOptions.plugins.legend.display = !this.lineChartOptions.plugins.legend.display;
+      // Force chart update
+      this.lineChartData = { ...this.lineChartData };
+    }
+  }
+
+  exportChartData() {
+    const headers = 'Date,Approved,Rejected\n';
+    const rows = this.lineChartData.labels?.map((label, i) => {
+      const appr = this.lineChartData.datasets[0].data[i];
+      const rej = this.lineChartData.datasets[1].data[i];
+      return `${label},${appr},${rej}`;
+    }).join('\n');
+
+    const blob = new Blob([headers + rows], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `tancura_claims_performance_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    this.snackBar.open('Claims performance ledger exported', 'CSV', { duration: 3000 });
   }
 }
