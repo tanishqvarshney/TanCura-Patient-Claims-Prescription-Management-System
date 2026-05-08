@@ -1,0 +1,1 @@
+import"./chunk-35PI25VP.js";var t=[{path:"",loadComponent:()=>import("./chunk-PQWSUWSE.js").then(o=>o.DrugLookupComponent)},{path:"prescriptions",loadComponent:()=>import("./chunk-ML4WMTDT.js").then(o=>o.PrescriptionListComponent)}];export{t as PHARMACY_ROUTES};
