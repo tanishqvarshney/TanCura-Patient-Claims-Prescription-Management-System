@@ -151,8 +151,8 @@ export class ClaimsService {
       );
     }
 
-    const start = ((params.page ?? 1) - 1) * (params.pageSize ?? 10);
-    const end = start + (params.pageSize ?? 10);
+    const start = ((params.page ?? 1) - 1) * (params.pageSize ?? 50);
+    const end = start + (params.pageSize ?? 50);
     
     const result: PagedResult<ClaimSummary> = {
       items: filtered.slice(start, end),

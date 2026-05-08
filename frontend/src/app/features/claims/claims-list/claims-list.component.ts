@@ -124,6 +124,22 @@ import { Subject, takeUntil, debounceTime, switchMap, finalize, tap } from 'rxjs
             </table>
           }
         </div>
+
+        <!-- Pagination Bar -->
+        <div class="ledger-footer">
+          <div class="pagination-info">
+            Showing <strong>{{ claims().length }}</strong> of <strong>{{ total() }}</strong> clinical records
+          </div>
+          <div class="pagination-actions">
+            <button mat-icon-button [disabled]="currentPage() === 1" (click)="prevPage()">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <span class="page-indicator">Page {{ currentPage() }} of {{ totalPages()() }}</span>
+            <button mat-icon-button [disabled]="currentPage() >= totalPages()()" (click)="nextPage()">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   `,
@@ -195,9 +211,13 @@ import { Subject, takeUntil, debounceTime, switchMap, finalize, tap } from 'rxjs
     .action-btn { color: #94a3b8; transition: var(--transition); }
     .action-btn:hover { color: var(--primary); background: var(--primary-light); }
 
-    .empty-state { text-align: center; padding: 80px 0; color: var(--text-muted); }
     .empty-state mat-icon { font-size: 48px; width: 48px; height: 48px; margin-bottom: 16px; opacity: 0.2; }
     .empty-state p { font-size: 16px; font-weight: 500; }
+
+    .ledger-footer { padding: 16px 32px; background: #f8fafc; border-top: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
+    .pagination-info { font-size: 13px; color: var(--text-muted); }
+    .pagination-actions { display: flex; align-items: center; gap: 12px; }
+    .page-indicator { font-size: 13px; font-weight: 700; color: var(--text-main); }
   `]
 })
 export class ClaimsListComponent implements OnInit, OnDestroy {
@@ -214,13 +234,16 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   });
   loading = signal(true);
   statusFilter = 'All';
+  total = signal(0);
+  currentPage = signal(1);
+  pageSize = 50;
 
   constructor() {
     this.searchSubject.pipe(
       debounceTime(300),
       tap(() => this.loading.set(true)),
       switchMap(q => {
-        const params: any = {};
+        const params: any = { page: this.currentPage(), pageSize: this.pageSize };
         if (this.statusFilter !== 'All') params.status = this.statusFilter;
         if (q) params.search = q;
         return this.claimsService.getClaims(params).pipe(
@@ -230,6 +253,7 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
       takeUntil(this.destroy$)
     ).subscribe(result => {
       this.claims.set(result.items);
+      this.total.set(result.total);
     });
 
     // Bridge signal to subject correctly using effect()
@@ -237,6 +261,10 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
       const q = this.searchService.query();
       this.searchSubject.next(q);
     });
+  }
+
+  get totalPages() {
+    return () => Math.ceil(this.total() / this.pageSize) || 1;
   }
 
   ngOnInit() {
@@ -250,6 +278,25 @@ export class ClaimsListComponent implements OnInit, OnDestroy {
   }
 
   loadClaims() {
+    this.currentPage.set(1);
+    this.searchSubject.next(this.searchService.query());
+  }
+
+  prevPage() {
+    if (this.currentPage() > 1) {
+      this.currentPage.update(p => p - 1);
+      this.loadClaimsPage();
+    }
+  }
+
+  nextPage() {
+    if (this.currentPage() < this.totalPages()()) {
+      this.currentPage.update(p => p + 1);
+      this.loadClaimsPage();
+    }
+  }
+
+  private loadClaimsPage() {
     this.searchSubject.next(this.searchService.query());
   }
 
