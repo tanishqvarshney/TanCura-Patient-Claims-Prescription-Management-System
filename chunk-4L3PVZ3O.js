@@ -1,1 +1,0 @@
-import{Y as e,eb as o}from"./chunk-WL7SA23X.js";var s=(()=>{class t{constructor(){this.query=o("")}updateQuery(r){this.query.set(r)}static{this.\u0275fac=function(i){return new(i||t)}}static{this.\u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})}}return t})();export{s as a};
